@@ -6,6 +6,17 @@ on:
 jobs:
   ci-deploy:
     runs-on: ubuntu-latest
+
+    defaults:
+      run:
+        shell: bash
+        working-directory: ./
+        pre-command: |
+          sudo find . -type d -exec chmod 755 {} \;
+          sudo find . -type f -exec chmod 644 {} \;
+          sudo chmod -R 775 web/app/uploads || true
+          sudo chown -R $USER:$USER .
+
     steps:
       - name: Checkout Repository
         uses: actions/checkout@v5
