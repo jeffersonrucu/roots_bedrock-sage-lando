@@ -12,7 +12,6 @@ jobs:
           sudo find . -type d -exec chmod 755 {} \;
           sudo find . -type f -exec chmod 644 {} \;
           sudo chmod -R 775 web/app/uploads || true
-          sudo chown -R $USER:$USER .
 
       - name: Checkout Repository
         uses: actions/checkout@v5
