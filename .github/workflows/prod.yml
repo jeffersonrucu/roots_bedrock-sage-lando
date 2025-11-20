@@ -11,7 +11,6 @@ jobs:
         run: |
           sudo find . -type d -exec chmod 755 {} \;
           sudo find . -type f -exec chmod 644 {} \;
-          sudo chmod -R 775 web/app/uploads || true
 
       - name: Checkout Repository
         uses: actions/checkout@v5
@@ -21,21 +20,16 @@ jobs:
         with:
           node-version: '24'
 
-      - name: Set up Composer
-        uses: php-actions/composer@v6
-        with:
-          php_version: '8.3'
+      - name: Install Dependencies Node [Sage Theme]
+        working-directory: ./web/app/themes/sage
+        run: npm install && npm run build
 
-      - name: Install Plugins and Dependencies [WordPress]
-        working-directory: ./
+      - name: Install Dependencies Composer [Sage Theme]
+        working-directory: ./web/app/themes/sage
         run: composer install --no-dev --optimize-autoloader
 
-      - name: Install Dependencies [Sage Theme]
-        working-directory: ./web/app/themes/sage
-        run: |
-          composer install --no-dev --optimize-autoloader
-          npm install
-          npm run build
+      - name: Install Dependencies [WordPress Bedrock]
+        run: composer install --no-dev --optimize-autoloader
 
   # cd-deploy:
   #   needs: ci-deploy
