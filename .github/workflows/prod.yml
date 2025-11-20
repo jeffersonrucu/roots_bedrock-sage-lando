@@ -31,6 +31,6 @@ jobs:
         working-directory: ./
         run: composer install --no-dev --optimize-autoloader
 
-  cd-deploy:
-    needs: ci-deploy
-    runs-on: self-hosted
+  # cd-deploy:
+  #   needs: ci-deploy
+  #   runs-on: self-hosted
