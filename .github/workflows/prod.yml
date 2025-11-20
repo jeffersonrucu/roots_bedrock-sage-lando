@@ -40,35 +40,14 @@ jobs:
     steps:
       - name: Define Environment Variables
         run: |
-          TIMESTAMP=$(date +%Y%m%d%H%M%S)
-          RELEASE_DIR="/home/ec2-user/releases/$TIMESTAMP"
-          CURRENT_SYMLINK="/home/ec2-user/project"
-          echo "RELEASE_DIR=$RELEASE_DIR" >> $GITHUB_ENV
-          echo "CURRENT_SYMLINK=$CURRENT_SYMLINK" >> $GITHUB_ENV
+          PROJECT_PATH="/home/ec2-user/project"
+          echo "PROJECT_PATH=$PROJECT_PATH" >> $GITHUB_ENV
 
       - name: Download Artefacts from CI
         uses: actions/download-artifact@v4
         with:
           name: prod-deploy
 
-      - name: Define New Release Path
-        id: release_path
-        run: |
-          mkdir -p $RELEASE_DIR
-
       - name: Move Artefacts to Release Directory
         run: |
-          rsync -av --remove-source-files $(pwd)/ ${{ env.RELEASE_DIR }}/
-
-      - name: Swap Symlink to New Release
-        run: |
-          ln -sfn ${{ env.RELEASE_DIR }} ${{ env.CURRENT_SYMLINK }}
-
-      - name: Lando Rebuild
-        working-directory: ${{ env.CURRENT_SYMLINK }}
-        run: lando start -y
-
-      - name: Clean Up Old Releases
-        run: |
-          ls -t /home/ec2-user/releases/ | tail -n +5 | xargs -I {} rm -rf /home/ec2-user/releases/{}
-
+          rsync -av --remove-source-files $(pwd)/ ${{ env.PROJECT_PATH }}/
