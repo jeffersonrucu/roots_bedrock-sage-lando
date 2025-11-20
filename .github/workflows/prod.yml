@@ -1,0 +1,34 @@
+name: Deploy Application to Production
+on:
+  push:
+    branches: [ master ]
+
+jobs:
+  ci-deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v5
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v6
+        with:
+          node-version: '24'
+
+      - name: Set up Composer
+        uses: php-actions/composer@v6
+        with:
+          php-version: '8.3'
+
+      - name: Install Dependencies [Sage Theme]
+        working-directory: ./web/app/themes/sage
+        run: composer install --no-dev --optimize-autoloader
+        run: npm install && npm run build:production
+
+      - name: Install Plugins and Dependencies [WordPress]
+        working-directory: ./
+        run: composer install --no-dev --optimize-autoloader
+
+  cd-deploy:
+    needs: ci-deploy
+    runs-on: self-hosted
