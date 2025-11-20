@@ -60,17 +60,13 @@ jobs:
         run: |
           rsync -av --remove-source-files $(pwd)/ ${{ env.RELEASE_DIR }}/
 
-      - name: Start Lando Environment in New Release
-        working-directory: ${{ env.RELEASE_DIR }}
-        run: lando start -y
-
       - name: Swap Symlink to New Release
         run: |
           ln -sfn ${{ env.RELEASE_DIR }} ${{ env.CURRENT_SYMLINK }}
 
       - name: Lando Rebuild
         working-directory: ${{ env.CURRENT_SYMLINK }}
-        run: lando rebuild -y
+        run: lando start -y
 
       - name: Clean Up Old Releases
         run: |
