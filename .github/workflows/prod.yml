@@ -26,16 +26,16 @@ jobs:
         with:
           php_version: '8.3'
 
+      - name: Install Plugins and Dependencies [WordPress]
+        working-directory: ./
+        run: composer install --no-dev --optimize-autoloader
+
       - name: Install Dependencies [Sage Theme]
         working-directory: ./web/app/themes/sage
         run: |
           composer install --no-dev --optimize-autoloader
           npm install
           npm run build
-
-      - name: Install Plugins and Dependencies [WordPress]
-        working-directory: ./
-        run: composer install --no-dev --optimize-autoloader
 
   # cd-deploy:
   #   needs: ci-deploy
